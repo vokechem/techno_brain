@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
+import Search from "./Search";
 const Tutorial = (props) => {
   const [inputs, setInputs] = useState({});
+  
+  const [errorMessage, setErrorMessage] = useState(null);
+  
   const [data, setData] = useState([]);
   const url = "/api/tutorial";
   const fetchData = () => {
@@ -36,42 +40,29 @@ const Tutorial = (props) => {
       [event.target.name]: event.target.value,
     }));
   };
+   const search = searchValue => {
+   
+    setErrorMessage(null);
+
+    fetch(url)
+      .then(response => response.json())
+      .then(jsonResponse => {
+        if (jsonResponse.Response === "True") {
+          setData(jsonResponse.Search);
+    
+        } else {
+          setErrorMessage(jsonResponse.Error);
+          
+        }
+      });
+  	};
+
 
   const HandleSubmit = (event) => {
     event.preventDefault();
-    if (inputs.id) {
       Update();
-    } else {
-      Save()
-    }
   };
-  const Save = () => {
-    let data = {
-      title: inputs.title,
-      description: inputs.description
-    }
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": window.sessionStorage.getItem("xtoken"),
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) =>
-        response.json().then((data) => {
-          if (data.success) {
-            fetchData();
-            alert("Saved successfully");
-          } else {
-            alert(data.message);
-          }
-        })
-      )
-      .catch((err) => {
-        alert("Failed");
-      });
-  };
+  
   const Update = () => {
     let data = {
       title: inputs.title,
@@ -103,14 +94,39 @@ const Tutorial = (props) => {
     setInputs(k)
   };
   return (
-    <div id="content" className="content">
+    <section id="services">
+      <br/>
+      <br/>
+    <div className="container" data-aos="fade-up">
+      <div className="row vertical-center-row">
+          <div className="col-sm-9 col-md-7 col-lg-12 mx-auto">
+	<div class="row">
+	 <br/>
+      <br/>
+	   <br/>
+      <br/>
+  <div class="col-6">
+   <div class="card-body">
+               <Search search={search} />
+                  <h3 >Tutorial list</h3>
+                  <div class="collapsiblecontent">
+                    <ul class="list-group list-group-flush">
+                      {data.map((k, i) => {
+                        return (
+                          <li class="list-group-item" style={{ cursor: "pointer" }} onClick={(e) => handleSelectModule(k, e)}>{k.description}
+						  
+</li>
 
-      <h1 class="page-header mb-3">Tutorials</h1>
-      <div style={{ backgroundColor: "white", borderRadius: "15px" }}>
-        <br />
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-sm-6">
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+
+                </div>
+  </div>
+  <div class="col-6">
+ <h3>Tutorial</h3>
               <div className="ibox-content">
                 <form className="form-horizontal" onSubmit={HandleSubmit}>
                   <div className=" row">
@@ -161,7 +177,7 @@ const Tutorial = (props) => {
                         <div className="col-sm-8"></div>
                         <div className="col-sm-4">
                           <div class="d-flex flex-row float-right">
-                            {inputs.id ? <button className="btn btn-primary p-2" type="submit">
+                             {inputs.id ? <button className="btn btn-primary p-2" type="submit">
                               Update
                           </button> : <button className="btn btn-primary p-2" type="submit">
                                 Submit
@@ -173,38 +189,17 @@ const Tutorial = (props) => {
                     </div>
                   </div>
                 </form>
-                <br />
-                <div class="card-body">
-                  <input
-                    type="text"
-                    title="Search"
-                    className="form-control"
-                    name="Search"
-                    required
-                    value={inputs.Search}
-                    onChange={handleInputChange}
-                  // defaultvalue={inputs.name}
-                  />
-                  <h3 >Tutorial list</h3>
-                  <div class="collapsiblecontent">
-                    <ul class="list-group list-group-flush">
-                      {data.map((k, i) => {
-                        return (
-                          <li class="list-group-item" style={{ cursor: "pointer" }} onClick={(e) => handleSelectModule(k, e)}>{k.description}</li>
-
-                        );
-                      })}
-                    </ul>
-                  </div>
-
-
-                </div>
               </div>
-            </div>
+            
+        
+  </div>
+</div>
+	   </div>
           </div>
         </div>
-      </div>
-    </div>
+   
+    
+  </section>
   );
 };
 export default Tutorial;
