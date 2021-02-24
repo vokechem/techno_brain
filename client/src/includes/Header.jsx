@@ -4,17 +4,23 @@ class Header extends Component{
     render(){
         return (
 <div>
-<div id="topbar" className="d-none d-lg-flex align-items-end fixed-top topbar-transparent">
-    <div className="container d-flex justify-content-end">
-      
-    </div>
-  </div>
-  <header id="header" className="fixed-top header-transparent">
-    <div className="container d-flex align-items-center">
-      <h3 className="logo mr-auto"><a href="index.html">Tutorials</a></h3>
-      
-    </div>
-  </header>
+<nav className="navbar navbar-expand navbar-dark bg-dark">
+          <a href="/Tutoriallist" className="navbar-brand">
+           Kelvin Chemey
+          </a>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/Tutoriallist"} className="nav-link">
+                Tutorials
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/Register"} className="nav-link">
+                Add
+              </Link>
+            </li>
+          </div>
+        </nav>
   {this.props.children}
 </div>
         );
